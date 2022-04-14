@@ -1,0 +1,26 @@
+version: '3.2'
+# web container
+services:
+  repo:
+    build: .
+    container_name: tmax-repo
+    image: tmax-repo
+    ports:
+      - "80:80"
+      - "22:22"
+    volumes:
+      - type : "bind"
+        source : "/var/spool/aptly"
+        target : "/var/spool/aptly"
+  jenkins:
+    image: jenkins/jenkins:lts
+    container_name: tmax-jenkins
+    user: root
+    ports:
+      - "8080:8080" # jenkins port
+    volumes:
+      - type : "bind"
+        source : "${PWD}/jenkins"
+        target : "/var/jenkins_home"
+    links:
+      - repo
